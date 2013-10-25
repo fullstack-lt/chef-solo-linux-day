@@ -1,1 +1,1 @@
-Talk About Varnish - Reverse HTTP Proxy
+Talk About Chef Solo and Server Provisioning
