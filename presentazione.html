@@ -136,10 +136,85 @@
         </section>
 
         <section>
-          <h2>Architettura</h2>
+          <h2>Chef è</h2>
           <ul>
-            
+            <li>Una <em>serie di tool e procedure</em> per la gestione di un'architettura</li>
+            <li>Un <em>"linguaggio di programmazione"</em> per descrivere un'architettura</li>
           </ul>
+        </section>
+
+        <section>
+          <h2>Componenti di Chef</h2>
+          <img src="img/overview_chef_quick.png" width='500' />
+        </section>
+
+        <section>
+          <h2>Possibili Architetture</h2>
+          <ul>
+            <li>
+              <strong>chef-server + chef-client</strong>
+              <ul>
+                <li>valido in ambienti enterprise</li>
+                <li>usato su infrastrutture con centinaia/migliaia di nodi</li>
+                <li>richiede un team di sysadmin dedicato</li>
+              </ul>
+            </li>
+            <li>
+              <strong>chef-solo</strong>
+              <ul>
+                <li>ovvero chef-client senza chef-server</li>
+                <li>valido per gestire un piccolo numero di nodi</li>
+                <li>ottimo per imparare chef</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>chef-solo</h2>
+          <ul>
+            <li>Raccoglie tutti i componenti necessari a configurare un server in un unica cartella</li>
+            <li>La configurazione può essere mantenuta sul server come su un repository esterno</li>
+            <li>Una volta ultimata la configurazione si lancia <em>"una run"</em> di chef-client a mano</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>La configurazione</h2>
+          <pre><code class="bash">
+chef-solo/
+├── cookbooks
+│   └── wordpress
+│       ├── attributes
+│       │   └── default.rb
+│       ├── recipes
+│       │   └── default.rb
+│       └── templates
+│           └── default
+│               ├── wordpress.conf.erb
+│               └── wp-config.php.erb
+├── node.json
+└── solo.rb
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>node.json</h2>
+          <pre><code class="json">
+{
+  "run_list": [
+    "recipe[wordpress]"
+  ],
+  "wordpress":{
+    "version": "latest",
+    "db": {
+      "database": "wordpress_db",
+      "user": "wordpress_user",
+      "password": "my_P4ssw0rD"
+    }
+  }
+}
+          </code></pre>
         </section>
 
         <section>
