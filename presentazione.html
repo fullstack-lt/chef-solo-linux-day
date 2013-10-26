@@ -246,6 +246,82 @@ chef-solo/
         </section>
 
         <section>
+          <h2>Dentro una recipe (1)</h2>
+          <pre><code class="ruby">
+package "mysql-server" do
+  action :upgrade
+end
+
+package "apache2" do
+  action :install
+end
+
+package "nginx" do
+  action :remove
+end
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Dentro una recipe (2)</h2>
+          <pre><code class="ruby">
+include_recipe "mysql::server"
+
+mysql_database node['wordpress']['db']['database'] do
+  action :create
+end
+
+mysql_database_user node['wordpress']['db']['user'] do
+  password node['wordpress']['db']['password']
+  database_name node['wordpress']['db']['database']
+  action :grant
+end
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Dentro una recipe (3)</h2>
+          <pre><code class="ruby">
+template "#{node['apache']['dir']}/sites-available/wordpress.conf" do
+  owner    'root'
+  group    node['apache']['root_group']
+  mode     '0644'
+  variables(
+    :name => "wordpress",
+    :server_name => "mywordpress.it",
+    :docroot => "/var/www/wordpress"
+  )
+  if ::File.exists?("#{node['apache']['dir']}/sites-enabled/wordpress.conf")
+    notifies :reload, 'service[apache2]'
+  end
+end
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Dentro un template</h2>
+          <pre><code class="erb">
+<VirtualHost *:80>
+  ServerName <%= @server_name %>
+  DocumentRoot <%= @docroot %>
+
+  LogLevel info
+  ErrorLog <%= node['apache']['log_dir'] %>/<%= @name %>-error.log
+  CustomLog <%= node['apache']['log_dir'] %>/<%= @name %>-access.log combined
+
+  RewriteEngine On
+  RewriteLog <%= node['apache']['log_dir'] %>/<%= @name %>-rewrite.log
+  RewriteLogLevel 0
+</VirtualHost>
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Per tutti i gusti</h2>
+          <img src="img/oss_cookbooks.png" width='400' />
+        </section>
+
+        <section>
           <h1>La Pratica</h1>
         </section>
 
